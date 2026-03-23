@@ -60,7 +60,7 @@ margin-top:40px;
 
 
 
-/* 3D BUTTONS */
+/* 3D BUTTONS + 3D TEXT */
 
 button{
 
@@ -78,13 +78,27 @@ cursor:pointer;
 
 color:white;
 
+
+
 background:linear-gradient(#6f82ff,#4b61ff);
+
+
 
 box-shadow:
 
 0 4px 0 #2c3eb8,
 
 0 6px 10px rgba(0,0,0,0.3);
+
+
+
+text-shadow:
+
+1px 1px 0 #2c3eb8,
+
+2px 2px 3px rgba(0,0,0,0.35);
+
+
 
 transition:0.15s;
 
@@ -116,7 +130,7 @@ box-shadow:
 
 
 
-/* INPUT */
+/* 3D TEXTBOX */
 
 input{
 
@@ -132,15 +146,45 @@ margin:5px;
 
 width:200px;
 
+
+
+background:linear-gradient(#ffffff,#eef2ff);
+
+
+
 box-shadow:
 
-inset 1px 1px 3px rgba(0,0,0,0.2);
+inset 2px 2px 5px rgba(0,0,0,0.25),
+
+0 2px 4px rgba(0,0,0,0.15);
+
+
+
+text-shadow:
+
+1px 1px 0 rgba(0,0,0,0.15);
 
 }
 
 
 
-/* LAYOUT */
+/* placeholder 3D */
+
+input::placeholder{
+
+color:#6a78d1;
+
+text-shadow:
+
+1px 1px 0 rgba(255,255,255,0.6),
+
+2px 2px 2px rgba(0,0,0,0.15);
+
+}
+
+
+
+/* layout */
 
 #meetingContainer{
 
@@ -158,7 +202,7 @@ flex-wrap:wrap;
 
 
 
-/* VIDEO */
+/* video */
 
 video{
 
@@ -168,13 +212,15 @@ border-radius:15px;
 
 margin:10px;
 
-box-shadow:0 6px 15px rgba(0,0,0,0.3);
+box-shadow:
+
+0 6px 15px rgba(0,0,0,0.3);
 
 }
 
 
 
-/* CHAT */
+/* chat */
 
 #chat{
 
@@ -204,7 +250,7 @@ box-shadow:
 
 
 
-/* MESSAGE AREA */
+/* messages */
 
 #messages{
 
@@ -228,11 +274,15 @@ font-size:14px;
 
 text-align:left;
 
+text-shadow:
+
+1px 1px 0 rgba(0,0,0,0.1);
+
 }
 
 
 
-/* MESSAGE */
+/* message bubble */
 
 #messages div{
 
@@ -252,7 +302,7 @@ box-shadow:
 
 
 
-/* CHAT CONTROLS */
+/* chat controls */
 
 #chatControls{
 
@@ -268,11 +318,7 @@ gap:6px;
 
 flex:1;
 
-padding:8px;
-
-border-radius:10px;
-
-border:1px solid #ccc;
+width:auto;
 
 }
 
@@ -360,410 +406,195 @@ border:1px solid #ccc;
 
 <script>
 
-
-
 let localStream;
-
 let peer;
-
 let call;
-
 let conn;
 
-
-
 let myName="";
-
 let theirName="Guest";
-
-
 
 async function startCamera(){
 
 localStream=await navigator.mediaDevices.getUserMedia({
-
 video:true,
-
 audio:true
-
 });
 
-
-
 document.getElementById("localVideo").srcObject=localStream;
-
 }
-
-
 
 function askName(){
 
 myName=prompt("Enter your name:");
 
-
-
 if(!myName||myName.trim()==="")
-
 myName="Guest";
-
 }
-
-
 
 function showMeetingUI(code){
 
-
-
 document.querySelector("h1").style.display="none";
-
 document.querySelector("p").style.display="none";
 
-
-
 document.getElementById("createBtn").style.display="none";
-
 document.getElementById("joinCode").style.display="none";
-
 document.getElementById("joinBtn").style.display="none";
-
-
 
 document.getElementById("meeting").style.display="block";
 
-
-
 document.getElementById("roomTitle").innerText=
-
 "Call Code: "+code+" | You: "+myName;
-
-
-
 }
-
-
 
 function addMessage(text,sender){
 
-
-
 const div=document.createElement("div");
-
-
 
 div.textContent=sender+": "+text;
 
-
-
-document.getElementById("messages")
-
-.appendChild(div);
-
-
+document.getElementById("messages").appendChild(div);
 
 document.getElementById("messages").scrollTop=
-
 document.getElementById("messages").scrollHeight;
-
-
-
 }
-
-
 
 function setupChat(connection){
 
-
-
 conn=connection;
-
-
 
 conn.on("open",()=>{
 
-
-
 conn.send({
-
 type:"name",
-
 value:myName
-
 });
 
-
-
 });
-
-
 
 conn.on("data",data=>{
 
-
-
 if(typeof data==="object"){
-
-
 
 if(data.type==="name"){
 
-
-
 theirName=data.value;
 
-
-
-document.getElementById("roomTitle")
-
-.innerText+=" | With: "+theirName;
-
-
-
+document.getElementById("roomTitle").innerText+=
+" | With: "+theirName;
 }
 
-
-
 }
-
-
-
 else{
 
-
-
 addMessage(data,theirName);
-
-
-
 }
-
-
 
 });
-
-
-
 }
-
-
 
 document.getElementById("sendBtn").onclick=()=>{
 
-
-
-const input=
-
-document.getElementById("chatInput");
-
-
+const input=document.getElementById("chatInput");
 
 const msg=input.value;
 
-
-
 if(!msg)return;
-
-
 
 addMessage(msg,myName);
 
-
-
 if(conn)conn.send(msg);
 
-
-
 input.value="";
-
-
-
 };
 
-
-
 document.getElementById("chatInput")
-
 .addEventListener("keypress",e=>{
 
-
-
 if(e.key==="Enter")
-
 document.getElementById("sendBtn").click();
 
-
-
 });
-
-
 
 document.getElementById("createBtn").onclick=async()=>{
 
-
-
 askName();
 
-
-
-const code=
-
-Math.random()
-
+const code=Math.random()
 .toString(36)
-
 .substring(2,8)
-
 .toUpperCase();
-
-
 
 showMeetingUI(code);
 
-
-
 await startCamera();
-
-
 
 peer=new Peer(code);
 
-
-
 peer.on("call",incoming=>{
-
-
 
 incoming.answer(localStream);
 
-
-
 incoming.on("stream",remoteStream=>{
 
-
-
-document.getElementById("remoteVideo")
-
-.srcObject=remoteStream;
-
-
+document.getElementById("remoteVideo").srcObject=
+remoteStream;
 
 });
 
-
-
 });
-
-
 
 peer.on("connection",connection=>{
 
-
-
 setupChat(connection);
-
-
 
 });
 
-
-
 peer.on("open",()=>{
-
-
 
 alert("Your Call Code is "+code);
 
-
-
 });
 
-
-
 };
-
-
 
 document.getElementById("joinBtn").onclick=async()=>{
 
-
-
 askName();
 
-
-
-const code=
-
-document.getElementById("joinCode")
-
+const code=document.getElementById("joinCode")
 .value.trim()
-
 .toUpperCase();
 
-
-
 if(!code)
-
 return alert("Enter a valid call code.");
-
-
 
 showMeetingUI(code);
 
-
-
 await startCamera();
-
-
 
 peer=new Peer();
 
-
-
 peer.on("open",()=>{
 
-
-
-call=
-
-peer.call(code,localStream);
-
-
+call=peer.call(code,localStream);
 
 call.on("stream",remoteStream=>{
 
-
-
-document.getElementById("remoteVideo")
-
-.srcObject=remoteStream;
-
-
+document.getElementById("remoteVideo").srcObject=
+remoteStream;
 
 });
 
-
-
-const connection=
-
-peer.connect(code);
-
-
+const connection=peer.connect(code);
 
 setupChat(connection);
 
-
-
 });
-
-
 
 };
 
-
-
 </script>
 
-
-
 </body>
-
 </html>
