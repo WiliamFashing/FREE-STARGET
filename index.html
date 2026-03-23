@@ -12,17 +12,17 @@
 
 <style>
 
-body {
+body{
 
-font-family: "Comic Sans MS";
+font-family:"Comic Sans MS";
 
-background: linear-gradient(135deg,#e4ecff,#ffffff);
+background:linear-gradient(135deg,#e4ecff,#ffffff);
 
-text-align: center;
+text-align:center;
 
-margin: 0;
+margin:0;
 
-padding: 0;
+padding:0;
 
 }
 
@@ -30,7 +30,7 @@ padding: 0;
 
 /* 3D TEXT */
 
-h1,h2,p {
+h1,h2,p{
 
 color:#4b61ff;
 
@@ -50,7 +50,7 @@ text-shadow:
 
 
 
-h1 {
+h1{
 
 font-size:48px;
 
@@ -62,7 +62,7 @@ margin-top:40px;
 
 /* 3D BUTTONS */
 
-button {
+button{
 
 font-family:"Comic Sans MS";
 
@@ -78,21 +78,13 @@ cursor:pointer;
 
 color:white;
 
-
-
-background: linear-gradient(#6f82ff,#4b61ff);
-
-
+background:linear-gradient(#6f82ff,#4b61ff);
 
 box-shadow:
 
 0 4px 0 #2c3eb8,
 
 0 6px 10px rgba(0,0,0,0.3);
-
-
-
-transform: translateY(0);
 
 transition:0.15s;
 
@@ -102,17 +94,17 @@ margin:5px;
 
 
 
-button:hover {
+button:hover{
 
-background: linear-gradient(#8091ff,#5a6fff);
+background:linear-gradient(#8091ff,#5a6fff);
 
 }
 
 
 
-button:active {
+button:active{
 
-transform: translateY(4px);
+transform:translateY(4px);
 
 box-shadow:
 
@@ -126,7 +118,7 @@ box-shadow:
 
 /* INPUT */
 
-input {
+input{
 
 padding:10px;
 
@@ -140,8 +132,6 @@ margin:5px;
 
 width:200px;
 
-
-
 box-shadow:
 
 inset 1px 1px 3px rgba(0,0,0,0.2);
@@ -150,9 +140,9 @@ inset 1px 1px 3px rgba(0,0,0,0.2);
 
 
 
-/* MEETING LAYOUT */
+/* LAYOUT */
 
-#meetingContainer {
+#meetingContainer{
 
 display:flex;
 
@@ -168,17 +158,9 @@ flex-wrap:wrap;
 
 
 
-#videos {
+/* VIDEO */
 
-flex:2;
-
-}
-
-
-
-/* VIDEO STYLE */
-
-video {
+video{
 
 width:40%;
 
@@ -186,73 +168,115 @@ border-radius:15px;
 
 margin:10px;
 
-box-shadow:
-
-0 6px 15px rgba(0,0,0,0.3);
+box-shadow:0 6px 15px rgba(0,0,0,0.3);
 
 }
 
 
 
-/* CHAT BOX */
+/* CHAT */
 
-#chat {
+#chat{
 
 flex:1;
 
 background:white;
 
-border-radius:15px;
+border-radius:18px;
 
-padding:10px;
-
-
-
-box-shadow:
-
-0 6px 15px rgba(0,0,0,0.25);
-
-
+padding:12px;
 
 display:flex;
 
 flex-direction:column;
 
-height:300px;
+height:340px;
 
-max-width:260px;
+min-width:260px;
+
+max-width:320px;
+
+box-shadow:
+
+0 8px 18px rgba(0,0,0,0.25);
 
 }
 
 
 
-#messages {
+/* MESSAGE AREA */
+
+#messages{
 
 flex:1;
 
 overflow-y:auto;
 
-text-align:left;
+padding:8px;
+
+margin-bottom:10px;
+
+background:linear-gradient(#ffffff,#f4f6ff);
+
+border-radius:12px;
+
+box-shadow:
+
+inset 0 2px 4px rgba(0,0,0,0.15);
 
 font-size:14px;
 
-padding:5px;
-
-
-
-text-shadow:
-
-1px 1px 0 rgba(0,0,0,0.15);
+text-align:left;
 
 }
 
 
 
-#chatInput {
+/* MESSAGE */
 
-width:70%;
+#messages div{
+
+margin-bottom:6px;
+
+padding:6px 8px;
+
+border-radius:8px;
+
+background:linear-gradient(#eef2ff,#dde4ff);
+
+box-shadow:
+
+1px 2px 4px rgba(0,0,0,0.15);
 
 }
+
+
+
+/* CHAT CONTROLS */
+
+#chatControls{
+
+display:flex;
+
+gap:6px;
+
+}
+
+
+
+#chatInput{
+
+flex:1;
+
+padding:8px;
+
+border-radius:10px;
+
+border:1px solid #ccc;
+
+}
+
+
 
 </style>
 
@@ -284,6 +308,8 @@ width:70%;
 
 <div id="meeting" style="display:none;">
 
+
+
 <h2 id="roomTitle"></h2>
 
 
@@ -304,11 +330,13 @@ width:70%;
 
 <div id="chat">
 
+
+
 <div id="messages"></div>
 
 
 
-<div>
+<div id="chatControls">
 
 <input id="chatInput" placeholder="Type message">
 
@@ -323,6 +351,8 @@ width:70%;
 
 
 </div>
+
+
 
 </div>
 
@@ -427,6 +457,12 @@ div.textContent=sender+": "+text;
 document.getElementById("messages")
 
 .appendChild(div);
+
+
+
+document.getElementById("messages").scrollTop=
+
+document.getElementById("messages").scrollHeight;
 
 
 
